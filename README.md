@@ -39,9 +39,9 @@
   2. ``./makeTable-small.sh 2`` : print a result table for small sized benchmarks with rank 2.
   3. ``./makeTable-large 1`` : print a result table for large sized benchmarks with rank 1.
 
-# We don't have all results of rank 3 since it is meaningless. Some programs do not print result for rank 2 since it does not have more than 2 read from edges.
-
-# Also, we do not have result table for large size with rank 2, 3 since it is meangless.
+# Etc.
+ - We don't have all results of rank 3 since it is meaningless. Some programs do not print result for rank 2 since it does not have more than 2 read from edges.
+ - Also, we do not have result table for large size with rank 2, 3 since it is meangless.
 
 # To run test under ``sastest``
   1. ``./run_all.sh`` : run all programs used with the prior work. The result will be saved under ``result`` directory under each benchmark directory.
