@@ -1,0 +1,1 @@
+- pthread_join and pthread_create test for pthread_join patch

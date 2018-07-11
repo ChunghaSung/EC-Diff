@@ -1,0 +1,74 @@
+CBMC version 5.8 64-bit x86_64 linux
+Parsing benchmarks/gcc-libstdc++-21334/main2.c
+Converting
+Type-checking main2
+Generating GOTO Program
+Adding CPROVER library (x86_64)
+Removal of function pointers and virtual functions
+file <builtin-library-pthread_create> line 46 function pthread_create: replacing function pointer by 3 possible targets
+Partial Inlining
+Generic Property Instrumentation
+Starting Bounded Model Checking
+Adding SC constraints
+Shared __CPROVER_threads_exited: 6R/4W
+Shared __CPROVER_next_thread_id: 14R/4W
+Shared sas0: 8R/11W
+Shared sas1: 8R/11W
+Shared rf_check1: 4R/3W
+Shared rf_check2: 4R/3W
+Shared rf_read1: 3R/3W
+Shared rf_read2: 3R/3W
+Shared rf_write01: 4R/3W
+Shared rf_write02: 4R/3W
+Shared rf_write11: 1R/3W
+Shared rf_write12: 1R/3W
+Shared rf_write21: 1R/3W
+Shared rf_write22: 1R/3W
+Shared rf_write31: 1R/3W
+Shared rf_write32: 1R/3W
+Shared str_lock: 12R/13W
+Shared mutex0: 6R/7W
+Shared str_is_shared_SHARED: 3R/2W
+Shared ref_count_SHARED: 4R/5W
+Shared destroyed_SHARED: 1R/4W
+Shared main::1::t1!0@1: 1R/2W
+Shared main::1::t2!0@1: 1R/2W
+Shared main::1::t3!0@1: 1R/2W
+size of program expression: 5830 steps
+no slicing due to threads
+Generated 21 VCC(s), 21 remaining after simplification
+Passing problem to propositional reduction
+converting SSA
+Running propositional reduction
+Post-processing
+Solving with MiniSAT 2.2.1 with simplifier
+136795 variables, 590395 clauses
+SAT checker: instance is UNSATISFIABLE
+Runtime decision procedure: 123.68s
+
+** Results:
+[] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.1] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.2] must hold lock upon unlock: SUCCESS
+[main.assertion.1] assertion 0: SUCCESS
+[pthread_mutex_unlock.assertion.3] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.4] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.5] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.6] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.7] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.8] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.9] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.10] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.11] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.12] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.13] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.14] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.15] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.16] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.17] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.18] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.19] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.20] must hold lock upon unlock: SUCCESS
+
+** 0 of 22 failed (1 iteration)
+VERIFICATION SUCCESSFUL

@@ -1,0 +1,46 @@
+CBMC version 5.8 64-bit x86_64 linux
+Parsing benchmarks/case4/main2.c
+Converting
+Type-checking main2
+Generating GOTO Program
+Adding CPROVER library (x86_64)
+Removal of function pointers and virtual functions
+file <builtin-library-pthread_create> line 46 function pthread_create: replacing function pointer by 2 possible targets
+Partial Inlining
+Generic Property Instrumentation
+Starting Bounded Model Checking
+Adding SC constraints
+Shared __CPROVER_threads_exited: 2R/3W
+Shared __CPROVER_next_thread_id: 1R/3W
+Shared x_SHARED: 2R/3W
+Shared sas0: 8R/9W
+Shared rf_check: 1R/3W
+Shared rf_read1: 3R/3W
+Shared rf_read2: 2R/3W
+Shared rf_write0: 4R/3W
+Shared rf_write1: 3R/3W
+size of program expression: 1210 steps
+no slicing due to threads
+Generated 5 VCC(s), 5 remaining after simplification
+Passing problem to propositional reduction
+converting SSA
+Running propositional reduction
+Post-processing
+Solving with MiniSAT 2.2.1 with simplifier
+28646 variables, 114579 clauses
+SAT checker: instance is SATISFIABLE
+Solving with MiniSAT 2.2.1 with simplifier
+28646 variables, 58979 clauses
+SAT checker: instance is UNSATISFIABLE
+Runtime decision procedure: 3.661s
+
+** Results:
+[] must hold lock upon unlock: SUCCESS
+[main.assertion.1] assertion !(rf_check != FALSE): FAILURE
+[pthread_mutex_unlock.assertion.1] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.2] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.3] must hold lock upon unlock: SUCCESS
+[pthread_mutex_unlock.assertion.4] must hold lock upon unlock: SUCCESS
+
+** 1 of 6 failed (2 iterations)
+VERIFICATION FAILED
