@@ -4,12 +4,27 @@
 - If you have any question, please contact to the authors.
 - To check the results only, you do not have to build and run since all results are already ready (In that case, please just run the script to print tables).
 
-# Authors
-- Chungha Sung
-- Shuvendu Lahiri
-- Constantin Enea
-- Chao Wang
-
+# Citing EC-Diff
+```
+@inproceedings{DBLP:conf/kbse/SungLEW18,
+  author    = {Chungha Sung and
+               Shuvendu K. Lahiri and
+               Constantin Enea and
+               Chao Wang},
+  title     = {Datalog-based scalable semantic diffing of concurrent programs},
+  booktitle = {Proceedings of the 33rd {ACM/IEEE} International Conference on Automated
+               Software Engineering, {ASE} 2018, Montpellier, France, September 3-7,
+               2018},
+  pages     = {656--666},
+  year      = {2018},
+  crossref  = {DBLP:conf/kbse/2018},
+  url       = {https://doi.org/10.1145/3238147.3238211},
+  doi       = {10.1145/3238147.3238211},
+  timestamp = {Wed, 21 Nov 2018 12:44:20 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/kbse/SungLEW18},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
 # To build (tested with LLVM 3.8.0) our program.
 
   1. Under ``src``, type ``mkdir build``.
