@@ -75,8 +75,8 @@ for d in ${ALL_DIRS}; do
         done
     done
 
-    # MayHB queries
-    for pq in mayHbP1 mayHbP2; do
+    # MayHB and MustHB queries
+    for pq in mayHbP1 mayHbP2 mustHbP1 mustHbP2; do
         QFILE="${TEST_PATH}/queries/${pq}.smt2"
         if [ -f "$QFILE" ]; then
             OUT="${pq}-after.smt2"
