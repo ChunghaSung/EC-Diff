@@ -185,6 +185,90 @@ cat test/general_rules-after.smt2 \
 - `sat` on `check` with `(= (:var 0) false)`: Programs are **different**.
 - `sat` on `p1-p2` / `p2-p1`: Returns the specific dependency tuples that exist in one program but not the other. Each tuple is a pair (rank 1), quadruple (rank 2), or sextuple (rank 3) of instruction IDs.
 
+## Souffle Datalog files
+
+Each benchmark also includes equivalent **Souffle** (`.dl`) files, converted from
+the Z3 `.smt2` queries by `smt2_to_souffle.py`. These are self-contained Datalog
+programs that can be run directly with the [Souffle](https://souffle-lang.github.io/)
+engine — no Z3 required.
+
+### What's in a `.dl` file
+
+Each `.dl` file contains the same four parts as its `.smt2` counterpart, translated
+to Souffle syntax:
+
+| SMT2 (Z3) | Souffle |
+|---|---|
+| `(declare-rel st (stmt thread pNumber))` | `.decl st(v0: unsigned, v1: unsigned, v2: unsigned)` |
+| `(rule (=> (impo s1 s2 p1) (po s1 s2 p1)))` | `po(s1, s2, p1) :- impo(s1, s2, p1).` |
+| `(rule (st #x0003 #x0001 #b0))` | `st(3, 1, 0).` |
+| `(not (= s1 s2))` | `s1 != s2` |
+| `(query p1p2Equal :print-answer true)` | `.output p1p2Equal` |
+
+Bitvector hex literals (`#x0003` → `3`, `#xf000` → `61440`) are converted to
+unsigned integers. The boolean `false` becomes `0`.
+
+### Files per benchmark (11 `.dl` + 11 `.smt2`)
+
+Each benchmark directory under `test/benchmarks/<name>/` contains:
+
+| File pattern | Description |
+|---|---|
+| `check-rank{1,2,3}-after.dl` | Equivalence check: are the programs' dependencies identical? |
+| `p1-p2-rank{1,2,3}-after.dl` | Dependencies that exist in P1 but not P2 |
+| `p2-p1-rank{1,2,3}-after.dl` | Dependencies that exist in P2 but not P1 |
+| `mayHbP1-after.dl` | All may-happen-before pairs in P1 |
+| `mayHbP2-after.dl` | All may-happen-before pairs in P2 |
+
+The corresponding `.smt2` files (same names with `.smt2` extension) are also
+available for use with Z3.
+
+### Running with Souffle
+
+```bash
+# Install Souffle (macOS)
+brew install souffle
+
+# Run a single query (prints results to stdout)
+souffle -D- test/benchmarks/case1/check-rank1-after.dl
+
+# Run and save output to a directory
+souffle -D /tmp/output test/benchmarks/case1/p2-p1-rank1-after.dl
+cat /tmp/output/p2Notp1Rank1.csv
+```
+
+### Interpreting Souffle output
+
+Souffle prints each output relation as a table. An **empty table** (header only,
+no data rows) corresponds to Z3's `unsat`. A **non-empty table** corresponds to
+Z3's `sat`, with each row being a witness tuple.
+
+```
+# Equivalent programs (empty output = unsat):
+$ souffle -D- test/benchmarks/case1/check-rank1-after.dl
+---------------
+p1p2Equal
+v0
+===============
+0                  ← p1p2Equal(false) derived → programs differ
+===============
+
+# No output rows = programs are equivalent at this rank
+```
+
+### Converting new `.smt2` files to Souffle
+
+```bash
+python3 smt2_to_souffle.py input.smt2 output.dl
+```
+
+### Verification
+
+All 123 rank-1 queries produce identical sat/unsat results between Z3 and Souffle:
+```bash
+./test_souffle.sh 1
+```
+
 ## Compatibility notes
 
 Results match the original LLVM 3.8 artifact for 120/120 queries (100%).
@@ -194,11 +278,13 @@ a missing `nop1` forward declaration that modern clang treats as an error.
 
 # Directory
   1. `extract_facts.py`: Python fact extractor (replaces `src/` LLVM pass)
-  2. `generate_all.sh`: Script to generate all .ll, .facts.smt2, and query files
-  3. `src/`: Original LLVM 3.8 pass (kept for reference, requires LLVM 3.8 to build)
-  4. `test/`: Test programs, scripts, benchmark programs, SMT rules and queries
-  5. `test/benchmarks/`: Benchmark programs with expected results
-  6. `sastest/`: Instrumented test programs of the prior work (unchanged)
+  2. `smt2_to_souffle.py`: Converter from Z3 Datalog `.smt2` to Souffle `.dl`
+  3. `generate_all.sh`: Script to generate all .ll, .facts.smt2, and query files
+  4. `test_souffle.sh`: Script to verify Souffle results match Z3
+  5. `src/`: Original LLVM 3.8 pass (kept for reference, requires LLVM 3.8 to build)
+  6. `test/`: Test programs, scripts, benchmark programs, SMT rules and queries
+  7. `test/benchmarks/<name>/`: Per-benchmark files: C sources, LLVM IR, facts, assembled `.smt2` and `.dl` queries
+  8. `sastest/`: Instrumented test programs of the prior work (unchanged)
 
 # Original LLVM 3.8 build instructions (for reference)
 
