@@ -140,6 +140,10 @@ def convert_atom(expr):
             a = convert_value(inner[1])
             b = convert_value(inner[2])
             return f'{a} != {b}'
+        elif isinstance(inner, list) and inner[0] == 'and':
+            # De Morgan: (not (and A B ...)) -> (or (not A) (not B) ...)
+            negated = [convert_atom(['not', sub]) for sub in inner[1:]]
+            return ('__OR__', negated)
         else:
             return '!' + convert_atom(inner)
 
