@@ -1,0 +1,42 @@
+71,73c71,73
+< #x0046:  store i32 %3, i32* %tmp, align 4
+< #x0047:  store i32 1, i32* @irq_enabled_SHARED, align 4
+< #x0048:  store i32 0, i32* %rc, align 4
+---
+> #x0046:  store i32 1, i32* @irq_enabled_SHARED, align 4
+> #x0047:  store i32 0, i32* %rc, align 4
+> #x0048:  store i32 %3, i32* %tmp, align 4
+80,83c80,83
+< #x004f:  store i8 1, i8* @intr_mask_SHARED, align 1
+< #x0050:  %7 = load i32, i32* %rc, align 4
+< #x0051:  store i32 %7, i32* %open1, align 4
+< #x0052:  %8 = load i32, i32* %open1, align 4
+---
+> #x004f:  %7 = load i32, i32* %rc, align 4
+> #x0050:  store i32 %7, i32* %open1, align 4
+> #x0051:  %8 = load i32, i32* %open1, align 4
+> #x0052:  store i8 1, i8* @intr_mask_SHARED, align 1
+178,180c178,180
+< #x00b1:  br i1 %cmp, label %if.then, label %if.end
+< #x00b2:  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str.1, i32 0, i32 0), i32 431, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @__PRETTY_FUNCTION__.napi_thread, i32 0, i32 0)) #4
+< #x00b3:  store i8 -1, i8* @IntrMask_SHARED, align 1
+---
+> #x00b1:  call void @__assert_fail(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str.1, i32 0, i32 0), i32 431, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @__PRETTY_FUNCTION__.napi_thread, i32 0, i32 0)) #4
+> #x00b2:  store i8 -1, i8* @IntrMask_SHARED, align 1
+> #x00b3:  br i1 %cmp, label %if.then, label %if.end
+209,211c209,211
+< #x00d0:  %tobool = icmp ne i32 %0, 0
+< #x00d1:  %1 = load i32, i32* @netif_running_SHARED, align 4
+< #x00d2:  %cmp = icmp eq i32 %1, 0
+---
+> #x00d0:  %1 = load i32, i32* @netif_running_SHARED, align 4
+> #x00d1:  %cmp = icmp eq i32 %1, 0
+> #x00d2:  %tobool = icmp ne i32 %0, 0
+266,268c266,268
+< #xf009:  %call19 = call i32 @pthread_mutex_lock(%union.pthread_mutex_t* @irq_sem) #3
+< #xf00a:  %call20 = call i32 @pthread_mutex_unlock(%union.pthread_mutex_t* @irq_sem) #3
+< #xf00b:  %call21 = call i32 @pthread_mutex_lock(%union.pthread_mutex_t* @napi_sem) #3
+---
+> #xf009:  %call20 = call i32 @pthread_mutex_unlock(%union.pthread_mutex_t* @irq_sem) #3
+> #xf00a:  %call21 = call i32 @pthread_mutex_lock(%union.pthread_mutex_t* @napi_sem) #3
+> #xf00b:  %call19 = call i32 @pthread_mutex_lock(%union.pthread_mutex_t* @irq_sem) #3

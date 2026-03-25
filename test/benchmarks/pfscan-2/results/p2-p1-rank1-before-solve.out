@@ -1,0 +1,5 @@
+sat
+(or (and (= (:var 0) #x099b) (= (:var 1) #x0389))
+    (and (= (:var 0) #x099b) (= (:var 1) #x04b8))
+    (and (= (:var 0) #x099b) (= (:var 1) #x025a))
+    (and (= (:var 0) #x099b) (= (:var 1) #x012b)))

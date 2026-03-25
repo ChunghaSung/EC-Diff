@@ -1,0 +1,105 @@
+Author: 
+This file is based on the pbzip2-0.9.4. bug report collected in concurrency-bug-master (https://github.com/jieyu/concurrency-bugs)
+There are two patches used.
+1) First patch is about the bug report from concurrecncy-bug-master, and the patch used sleep to set the order from mutex_destroy to mutex_unlock in consumer.
+  - However, for the testing we have used pthread_join to set the order for the same effect.
+
+
++--------------------+
+|                    |
+| SUMMARY            |
+|                    |
++--------------------+
+
+An order violation concurrency bug in pbzip2-0.9.4.
+
++---------------------------------------------------------+
+|                                                         |
+| DETAILS                                                 |
+|                                                         |
++---------------------------------------------------------+
+
+In pbzip2, the program will spawn consumer threads to do
+the compress and spawn a output thread to write data to the
+file. However, the main thread only join the output thread
+and don't join the consumer threads (line 1862). When the
+main thread try to free all the resources, it is possible
+that some consumer threads still haven't exited yet (line
+896).
+
+The main() will free fifo->mut in queueDelete() function
+(line 1912). However, the consumer threads might still need
+fifo->mut (line 897). Therefore, a segmentation fault will
+be thrown.
+
+The buggy interleaving is like the following:
+
+Thread 1                                  Thread 2
+
+void main(...) {                          void *consumer(void *q) {
+  ...                                       ...
+  for (i=0; i < numCPU; i++) {              for (;;) {
+    ret = pthread_create(&con, NULL,          pthread_mutex_lock(fifo->mut);
+              consumer, fifo);                while (fifo->empty) {
+    ...                                         if (allDone == 1)
+  }
+  ret = pthread_create(&output, NULL,
+            fileWriter, OutFilename);
+  ...
+  // start reading in data
+  producer(..., fifo);
+  ...
+  // wait until exit of thread
+  pthread_join(output, NULL);
+  ...
+  fifo->empty = 1;
+  ...
+  // reclaim memory
+  queueDelete(fifo);
+  fifo = NULL;
+
+                                                  pthread_mutex_unlock(fifo->mut);
+                                                  return NULL;
+                                                }
+                                                ...
+                                              }
+                                              ...
+                                            }
+                                            ...
+}                                         }
+
+---------------------
+
+Finally, I attach an email that is sent by the original
+finder of this bug decribing the root cause of it:
+
+> There is a problem with the queue release code in 0.9.4
+> which can lead to occasional SEGV's. The main code waits
+> for the output thread to finish and then releases the
+> mutexes and queue data structure. The problem is that if
+> you have multiple consumer threads, they can still be
+> running while main is releasing the queue and so get a
+> SIGSEGV.
+
+> I've attached a couple of patches. The first patch
+> (sleep.patch) demonstrates the problem by making one
+> consumer thread sleep for a while after all the input has
+> been read.  The remaining threads continue to run and
+> finish processing the data. Eventually the output thread
+> completes, pthread_join (output, NULL) returns, main
+> deletes the queue, then sleeps for a while allowing the
+> last consumer thread to wake up and use the deleted queue
+> structure:
+
+> hendon:pbzip2-0.9.4.mine % ./pbzip2 -p2 -q -k -f vmlinux
+> TID 8003: delaying for 10 seconds
+> main: deleted mutexes, sleeping for 10s
+> TID 8003: resuming
+> Segmentation fault
+
+> The other patch (wait.patch) fixes the problem by making
+> main wait for the consumer threads to complete as well.
+> My C++ skills are virtually non-existent, and I'm also a
+> pthreads novice, so there are probably better ways to fix
+> this, but it works for me... :)
+

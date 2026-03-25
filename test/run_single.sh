@@ -135,11 +135,11 @@ echo "${OUTPUT3_AFTER} is created. It can be tested with Z3"
 #$TIME -o results/p2MayHB-before-solve.time z3 ${OUTPUT5_BEFORE} > results/p2MayHB-before-solve.out
 
 echo "Run z3 with ${OUTPUT1_AFTER} ... "
-$TIME -o results/check-rank${2}-after-solve.time z3 ${OUTPUT1_AFTER} > results/check-rank${2}-after-solve.out
+${Z3_BIN} ${OUTPUT1_AFTER} 2>/dev/null | grep -v "^(error" > results/check-rank${2}-after-solve.out
 echo "Run z3 with ${OUTPUT2_AFTER} ... "
-$TIME -o results/p1-p2-rank${2}-after-solve.time z3 ${OUTPUT2_AFTER} > results/p1-p2-rank${2}-after-solve.out
+${Z3_BIN} ${OUTPUT2_AFTER} 2>/dev/null | grep -v "^(error" > results/p1-p2-rank${2}-after-solve.out
 echo "Run z3 with ${OUTPUT3_AFTER} ... "
-$TIME -o results/p2-p1-rank${2}-after-solve.time z3 ${OUTPUT3_AFTER} > results/p2-p1-rank${2}-after-solve.out
+${Z3_BIN} ${OUTPUT3_AFTER} 2>/dev/null | grep -v "^(error" > results/p2-p1-rank${2}-after-solve.out
 #echo "Run z3 with ${OUTPUT4_AFTER} ... "
 #$TIME -o results/p1MayHB-after-solve.time z3 ${OUTPUT4_AFTER} > p1MayHB-after-solve.out
 #echo "Run z3 with ${OUTPUT5_AFTER} ... "

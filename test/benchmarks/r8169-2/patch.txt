@@ -1,0 +1,8 @@
+4,6c4,6
+< #x0003:  store i32 1, i32* @init_sem_SHARED, align 4
+< #x0004:  %0 = load i32, i32* @start_device_SHARED, align 4
+< #x0005:  store i32 %0, i32* @hw_start_SHARED, align 4
+---
+> #x0003:  %0 = load i32, i32* @start_device_SHARED, align 4
+> #x0004:  store i32 %0, i32* @hw_start_SHARED, align 4
+> #x0005:  store i32 1, i32* @init_sem_SHARED, align 4

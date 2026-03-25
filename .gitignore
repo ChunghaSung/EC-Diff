@@ -1,0 +1,8 @@
+__pycache__/
+*.instMap.txt
+*.lockMap.txt
+*.threadMap.txt
+
+# Large MayHB result files from original artifact (exceed GitHub 100MB limit)
+**/results/p1MayHB-before-solve.out
+**/results/p2MayHB-before-solve.out
